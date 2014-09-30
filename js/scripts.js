@@ -14,13 +14,12 @@ var items = function( collection ) {
 	}
 
 	for ( var i = 0; i < data.length; i++) {
-
-		$( "<div>", { id: data[i] } ).appendTo( "#" + collection + " .items");
+		$( "<li>", { id: data[i] } ).appendTo( "#" + collection + " .items");
 		console.log("Printed");
 
 		$.getJSON( root + "items/" + data[i], function( item ) {
 			$( "<img>", { src: item.icon } ).appendTo( "#" + item.id );
-			$( "<p>", { html: "Name: " + item.name } ).appendTo( "#" + item.id );
+			$( "<p>", { html: item.name } ).appendTo( "#" + item.id );
 		});
 
 		$.getJSON( root + "commerce/prices/" + data[i], function( prices ) {
@@ -38,4 +37,3 @@ var items = function( collection ) {
 
 }
 document.write(items("grawl"));
-document.write(items("hylek"));
