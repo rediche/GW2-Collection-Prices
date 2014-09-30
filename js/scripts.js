@@ -2,6 +2,9 @@ var root = "https://api.guildwars2.com/v2/";
 
 var items = function( collection ) {
 
+	var totalBuy = 0;
+	var totalSell = 0;
+
 	console.log(collection);
 
 	if(collection == "hylek") {
@@ -11,6 +14,7 @@ var items = function( collection ) {
 	}
 
 	for ( var i = 0; i < data.length; i++) {
+
 		$( "<div>", { id: data[i] } ).appendTo( "#" + collection + " .items");
 		console.log("Printed");
 
@@ -20,11 +24,17 @@ var items = function( collection ) {
 		});
 
 		$.getJSON( root + "commerce/prices/" + data[i], function( prices ) {
+			totalBuy = totalBuy + prices.buys.unit_price;
+			totalSell = totalSell + prices.sells.unit_price;
 			$( "<p>", { html: "Buy: " + prices.buys.unit_price } ).appendTo( "#" + prices.id );
 			$( "<p>", { html: "Sell: " + prices.sells.unit_price } ).appendTo( "#" + prices.id );
 		});
 
 	}
+
+	$( "<p>", { html: "Total Direct Buy: " + totalBuy } ).appendTo( "#" + collection + " .totals");
+	$( "<p>", { html: "Total Price through Sellorders: " + totalSell } ).appendTo( "#" + collection + " .totals");
+
 
 }
 document.write(items("grawl"));
