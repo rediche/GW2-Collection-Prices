@@ -1,7 +1,3 @@
 .container .row { margin-top: 60px; }
 
-ul.items { list-style: none; margin-left: -40px; }
-ul.items li img { float: left; clear: left; }
-ul.items li p { left: 30px; }
-
-ul.items li { clear: both; }
+table.table tr td img { width: 24px; height: 24px; }

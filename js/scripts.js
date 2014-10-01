@@ -1,39 +1,60 @@
-var root = "https://api.guildwars2.com/v2/";
-
 var items = function( collection ) {
 
-	var totalBuy = 0;
-	var totalSell = 0;
+	var root = "https://api.guildwars2.com/v2/";
+	var itemsRdy = 0;
+	var pricesRdy = 0;
+	var totalBuy;
+	var totalSell;
 
-	console.log(collection);
-
-	if(collection == "hylek") {
+	if( collection == "hylek" ) {
 		var data = [14882, 14883, 14884, 14885, 14886, 14887, 14888, 14889, 14890, 14891, 14892, 14893, 14894, 14895, 14896, 14897, 14898, 14899, 14900];
-	} else if(collection == "grawl") {
-		var data = [46042, 46043, 46044, 46045, 46046, 46047, 46048, 46049, 46050, 46051, 46052, 46053, 46054, 46055, 46056, 46057, 46058, 46059, 46060]
+	} else if( collection == "grawl" ) {
+		var data = [46042, 46043, 46044, 46045, 46046, 46047, 46048, 46049, 46050, 46051, 46052, 46053, 46054, 46055, 46056, 46057, 46058, 46059, 46060];
 	}
 
 	for ( var i = 0; i < data.length; i++) {
-		$( "<li>", { id: data[i] } ).appendTo( "#" + collection + " .items");
-		console.log("Printed");
 
-		$.getJSON( root + "items/" + data[i], function( item ) {
-			$( "<img>", { src: item.icon } ).appendTo( "#" + item.id );
-			$( "<p>", { html: item.name } ).appendTo( "#" + item.id );
-		});
+		var icon;
+		var name;
+		var buy;
+		var sell;
 
-		$.getJSON( root + "commerce/prices/" + data[i], function( prices ) {
-			totalBuy = totalBuy + prices.buys.unit_price;
-			totalSell = totalSell + prices.sells.unit_price;
-			$( "<p>", { html: "Buy: " + prices.buys.unit_price } ).appendTo( "#" + prices.id );
-			$( "<p>", { html: "Sell: " + prices.sells.unit_price } ).appendTo( "#" + prices.id );
-		});
+		$.ajax({
+	    	url: root + "items/" + data[i],
+	    	async: false,
+	    	dataType: 'json',
+	    	success: function(item) {
+	    		icon = item.icon;
+	    		name = item.name;
 
+	    		itemsRdy = 1;
+	    	}
+	    });
+
+	    $.ajax({
+	    	url: root + "commerce/prices/" + data[i],
+	    	async: false,
+	    	dataType: 'json',
+	    	success: function(prices) {
+	    		totalBuy = totalBuy + prices.buys.unit_price;
+				totalSell = totalSell + prices.sells.unit_price;
+				buy = prices.buys.unit_price;
+				sell = prices.sells.unit_price;
+
+				pricesRdy = 1;
+	    	}
+	    });
+
+	    if(itemsRdy == 1 && pricesRdy == 1) {
+	    	var newTr = $("<tr><td><img src='" + icon + "'></td><td>" + name + "</td><td>" + sell + "</td><td>" + buy + "</td></tr>");
+			$( "#" + collection + " table.table.table-striped").append(newTr);
+	    }
+
+		console.log(i);
 	}
 
-	$( "<p>", { html: "Total Direct Buy: " + totalBuy } ).appendTo( "#" + collection + " .totals");
-	$( "<p>", { html: "Total Price through Sellorders: " + totalSell } ).appendTo( "#" + collection + " .totals");
-
+	$( "#" + collection +" h3 small" ).append( "Total Price at Direct Purchace: " + totalSell );
 
 }
-document.write(items("grawl"));
+
+$( document ).ready(items("grawl"), items("hylek"));
