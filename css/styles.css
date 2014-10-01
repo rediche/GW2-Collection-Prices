@@ -1,3 +1,18 @@
 .container .row { margin-top: 76px; }
 
 table.table tr td img { width: 24px; height: 24px; }
+
+#subpage {
+	top: 60px;
+	min-height: 30px;
+	height: 30px;
+	margin-bottom: 0px;
+}
+#subpage .navbar-brand {
+	padding: 4px 15px 20.5px;
+	font-size: 16px;
+}
+#subpage .navbar-nav > li > a {
+	padding-top: 4.5px;
+	padding-bottom: 4.5px;
+}
