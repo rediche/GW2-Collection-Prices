@@ -1,3 +1,28 @@
+var format = function( amount ) {
+	var copper;
+	var silver;
+	var gold; 
+	var formatted;
+
+	amount = amount.toString();
+	copper = amount.substr(-2,2);
+
+	if( amount.length > 2) {
+		silver = amount.substr(-4,2);
+	} else {
+		silver = 0;
+	}
+
+	if( amount.length > 4 ) {
+		gold = amount.substr(0, amount.length - 4);
+	} else {
+		gold = 0;
+	}
+
+	formatted = gold + "g " + silver + "s " + copper + "c";
+	return formatted;
+}
+
 var items = function( collection ) {
 
 	var root = "https://api.guildwars2.com/v2/";
@@ -6,30 +31,8 @@ var items = function( collection ) {
 	var totalBuy = 0;
 	var totalSell = 0;
 
-	var format = function( amount ) {
-		var copper;
-		var silver;
-		var gold; 
-		var formatted;
-
-		amount = amount.toString();
-		copper = amount.substr(-2,2);
-
-		if( amount.length > 2) {
-			silver = amount.substr(-4,2);
-		} else {
-			silver = 0;
-		}
-
-		if( amount.length > 4 ) {
-			gold = amount.substr(0, amount.length - 4);
-		} else {
-			gold = 0;
-		}
-
-		formatted = gold + "g " + silver + "s " + copper + "c";
-		return formatted;
-	}
+	var item;
+	var price;
 
 	if( collection == "hylek" ) {
 		var data = [14882, 14883, 14884, 14885, 14886, 14887, 14888, 14889, 14890, 14891, 14892, 14893, 14894, 14895, 14896, 14897, 14898, 14899, 14900];
@@ -49,59 +52,38 @@ var items = function( collection ) {
 		var data = [67028, 67034, 67036, 67039, 67047, 67048, 67049, 67050, 67051, 67052, 67059, 67060, 67061, 67062, 67064, 67065, 67069, 67073, 67074];
 	}
 
-	for ( var i = 0; i < data.length; i++) {
+	$.ajax({
+    	url: root + "items/?ids=" + String(data),
+    	async: false,
+    	dataType: 'json',
+    	success: function(items) {
+    		item = $.extend({}, items, item);
+    		itemsRdy = 1;
+    	}
+    });
 
-		var icon;
-		var name;
-		var buy;
-		var sell;
+    $.ajax({
+		url: root + "commerce/prices/?ids=" + String(data),
+		async: false,
+		dataType: 'json',
+		success: function(prices) {
+			price = $.extend({}, price, prices);
+			pricesRdy = 1;
+		}
+	});
 
-		$.ajax({
-	    	url: root + "items/" + data[i],
-	    	async: false,
-	    	dataType: 'json',
-	    	success: function(item) {
-	    		icon = item.icon;
-	    		name = item.name;
-
-	    		itemsRdy = 1;
-	    	}
-	    });
-
-	    $.ajax({
-	    	url: root + "commerce/prices/" + data[i],
-	    	async: false,
-	    	dataType: 'json',
-	    	success: function(prices) {
-	    		totalBuy = totalBuy + prices.buys.unit_price;
-				totalSell = totalSell + prices.sells.unit_price;
-				buy = prices.buys.unit_price;
-				sell = prices.sells.unit_price;
-
-				pricesRdy = 1;
-	    	}
-	    });
-
-	    if(itemsRdy == 1 && pricesRdy == 1) {
-	    	var newTr = $("<tr><td><img src='" + icon + "'></td><td>" + name + "</td><td>" + format(sell) + "</td><td>" + format(buy) + "</td></tr>");
+	if(itemsRdy == 1 && pricesRdy == 1) {
+		for ( var i = 0; i < data.length; i++) {
+		   	var newTr = $("<tr><td><img src='" + item[i].icon + "'></td><td>" + item[i].name + "</td><td>" + format(price[i].sells.unit_price) + "</td><td>" + format(price[i].buys.unit_price) + "</td></tr>");
 			$( "#" + collection + " table.table.table-striped").append(newTr);
-	    }
-
-		console.log(i);
+			totalSell = totalSell + price[i].sells.unit_price;
+			totalBuy  = totalBuy  + price[i].buys.unit_price;
+		}
 	}
 
 	$( "#" + collection +" h3 small" ).append( "<br />Total Price at Direct Purchace: " + format(totalSell) + "<br />Total Price with Buyorders: " + format(totalBuy) );
 
 }
-
-/*$( document ).ready(items("grawl"), 
-					items("hylek"), 
-					items("dwayna"),
-					items("exotic"),
-					items("jormag"),
-					items("spirit"),
-					items("aether"), 
-					items("chaos"));*/
 
 $('#rare').waypoint(function(direction) {
 	$('#basic-li').removeClass('active');
