@@ -20,3 +20,7 @@ table.table tr td img { width: 24px; height: 24px; }
 	padding-top: 4.5px;
 	padding-bottom: 4.5px;
 }
+
+.navbar-default .navbar-text {
+	color: #ffffff;
+}
