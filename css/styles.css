@@ -1,4 +1,8 @@
-.container .row { margin-top: 76px; }
+body {
+	padding-top: 60px;
+}
+
+.container .row { margin-top: 16px; }
 
 table.table tr td img { width: 24px; height: 24px; }
 

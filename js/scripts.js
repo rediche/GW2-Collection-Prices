@@ -120,3 +120,7 @@ $('#blacklion').waypoint(function(direction) {
 	$('#rare-li').removeClass('active');
 	$('#bl-li').addClass('active');
 });
+
+var shiftWindow = function() { scrollBy(0, -70) };
+if (location.hash) shiftWindow();
+window.addEventListener("hashchange", shiftWindow);
