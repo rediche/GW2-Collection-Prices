@@ -94,14 +94,14 @@ var items = function( collection ) {
 
 }
 
-$( document ).ready(items("grawl"), 
+/*$( document ).ready(items("grawl"), 
 					items("hylek"), 
 					items("dwayna"),
 					items("exotic"),
 					items("jormag"),
 					items("spirit"),
 					items("aether"), 
-					items("chaos"));
+					items("chaos"));*/
 
 $('#rare').waypoint(function(direction) {
 	$('#basic-li').removeClass('active');
