@@ -68,20 +68,26 @@ var items = function( collection ) {
 					pricesRdy = 1;
 
 					var check = function(arg, check, i, sb) {
-						if ( arg == check) {
-							if(sb == "sell") {	
+						if ( arg == check ) {
+							if( sb == "sell" ) {	
 								return format(price[i].sells.unit_price);
 							} else if(sb == "buy") {
 								return format(price[i].buys.unit_price);
 							}
 						} else {
-							return "Unknown price";
+							return "Unknown Price";	
 						}
 					}
 
 					for ( var i = 0; i < data.length; i++) {
-					   	var newTr = $("<tr><td><img src='" + item[i].icon + "'></td><td>" + item[i].name + "</td><td>" + check(price[i].id, item[i].id, i, "sell") + "</td><td>" + check(price[i].id, item[i].id, i, "buy") + "</td></tr>");
+						var newTr = $("<tr id='" + item[i].id + "'></tr>");
 						$( "#" + collection + " table.table.table-striped").append(newTr);
+					}
+					for ( var i = 0; i < data.length; i++) {
+					   	var newTr = $("<td><img src='" + item[i].icon + "'></td><td>" + item[i].name + "</td>");
+						$( "#" + item[i].id).prepend(newTr);
+						var newTr2 = $("<td>" + format(price[i].sells.unit_price) + "</td><td>" + format(price[i].buys.unit_price) + "</td>");
+						$( "#" + price[i].id).append(newTr2);
 						totalSell = totalSell + price[i].sells.unit_price;
 						totalBuy  = totalBuy  + price[i].buys.unit_price;
 					}
