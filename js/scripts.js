@@ -58,26 +58,13 @@ var items = function( collection ) {
     	dataType: 'json',
     	success: function(items) {
     		item = $.extend({}, items, item);
-    		itemsRdy = 1;
+
     		$.ajax({
 				url: root + "commerce/prices/?ids=" + String(data),
 				async: false,
 				dataType: 'json',
 				success: function(prices) {
 					price = $.extend({}, price, prices);
-					pricesRdy = 1;
-
-					var check = function(arg, check, i, sb) {
-						if ( arg == check ) {
-							if( sb == "sell" ) {	
-								return format(price[i].sells.unit_price);
-							} else if(sb == "buy") {
-								return format(price[i].buys.unit_price);
-							}
-						} else {
-							return "Unknown Price";	
-						}
-					}
 
 					for ( var i = 0; i < data.length; i++) {
 						var newTr = $("<tr id='" + item[i].id + "'></tr>");
@@ -95,33 +82,6 @@ var items = function( collection ) {
 			});
     	}
     });
-
-    /*$.ajax({
-		url: root + "commerce/prices/?ids=" + String(data),
-		async: false,
-		dataType: 'json',
-		success: function(prices) {
-			price = $.extend({}, price, prices);
-			pricesRdy = 1;
-			for ( var i = 0; i < data.length; i++) {
-			   	var newTr = $("<tr><td><img src='" + item[i].icon + "'></td><td>" + item[i].name + "</td><td>" + format(price[i].sells.unit_price) + "</td><td>" + format(price[i].buys.unit_price) + "</td></tr>");
-				$( "#" + collection + " table.table.table-striped").append(newTr);
-				totalSell = totalSell + price[i].sells.unit_price;
-				totalBuy  = totalBuy  + price[i].buys.unit_price;
-			}
-		}
-	});*/
-
-	/*if(itemsRdy == 1 && pricesRdy == 1) {
-			var combined = $.extend({}, item, price);
-			alert(JSON.stringify(combined, null, 4));
-		for ( var i = 0; i < data.length; i++) {
-		   	var newTr = $("<tr><td><img src='" + item[i].icon + "'></td><td>" + item[i].name + "</td><td>" + format(price[i].sells.unit_price) + "</td><td>" + format(price[i].buys.unit_price) + "</td></tr>");
-			$( "#" + collection + " table.table.table-striped").append(newTr);
-			totalSell = totalSell + price[i].sells.unit_price;
-			totalBuy  = totalBuy  + price[i].buys.unit_price;
-		}
-	}*/
 
 	$( "#" + collection +" h3 small" ).append( "<br />Total Price at Direct Purchace: " + format(totalSell) + "<br />Total Price with Buyorders: " + format(totalBuy) );
 
