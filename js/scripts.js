@@ -26,8 +26,6 @@ var format = function( amount ) {
 var items = function( collection ) {
 
 	var root = "https://api.guildwars2.com/v2/";
-	var itemsRdy = 0;
-	var pricesRdy = 0;
 	var totalBuy = 0;
 	var totalSell = 0;
 
